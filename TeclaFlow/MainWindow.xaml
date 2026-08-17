@@ -1,0 +1,248 @@
+<Window x:Class="TeclaFlow.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="TeclaFlow" Icon="Assets/teclaflow-icon.png" Width="1120" Height="760" MinWidth="900" MinHeight="650"
+        WindowStartupLocation="CenterScreen" Background="{StaticResource PageBrush}"
+        Foreground="{StaticResource InkBrush}"
+        Loaded="Window_Loaded" Closing="Window_Closing">
+    <Window.Resources>
+        <Storyboard x:Key="FadeInStoryboard">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.25"/>
+        </Storyboard>
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="18"/>
+            <Setter Property="Padding" Value="24"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Effect">
+                <Setter.Value><DropShadowEffect BlurRadius="18" ShadowDepth="2" Opacity="0.07" Color="#10204A"/></Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="230"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="#171D31">
+            <Grid Margin="12,18">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="13,4,8,25">
+                    <Border Width="42" Height="42" CornerRadius="12" Background="#635BFF" ClipToBounds="True">
+                        <Image Source="Assets/teclaflow-icon.png" Stretch="UniformToFill"/>
+                    </Border>
+                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="TeclaFlow" Foreground="White" FontSize="17" FontWeight="Bold"/>
+                        <TextBlock Text="Escritura asistida" Foreground="#8F97AE" FontSize="11"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1">
+                    <Button x:Name="WriteNavButton" Content="⌨  Escribir" Tag="Selected"
+                            Style="{StaticResource NavButtonStyle}" Click="WriteNavButton_Click"/>
+                    <Button x:Name="GuideNavButton" Content="◉  Guía rápida"
+                            Style="{StaticResource NavButtonStyle}" Click="GuideNavButton_Click"/>
+                    <Button x:Name="AboutNavButton" Content="ⓘ  Uso responsable"
+                            Style="{StaticResource NavButtonStyle}" Click="AboutNavButton_Click"/>
+                </StackPanel>
+
+                <Border Grid.Row="3" Margin="8" Background="#202740" CornerRadius="12" Padding="14">
+                    <StackPanel>
+                        <TextBlock Text="Atajos globales" Foreground="White" FontWeight="SemiBold"/>
+                        <TextBlock Text="F7  Pausar / continuar" Foreground="#AEB4C6" Margin="0,8,0,0" FontSize="12"/>
+                        <TextBlock Text="F8  Detener" Foreground="#AEB4C6" Margin="0,4,0,0" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1">
+            <Grid x:Name="WriteView" Margin="38,28,38,32">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Escribe con calma" FontSize="28" FontWeight="Bold"/>
+                        <TextBlock Text="Prepara tu texto y TeclaFlow lo introducirá en la ventana activa."
+                                   Foreground="{StaticResource MutedBrush}" FontSize="14" Margin="0,6,0,0"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="Ver tutorial" Style="{StaticResource SecondaryButtonStyle}"
+                            Padding="17,10" VerticalAlignment="Center" Click="ShowTutorial_Click"/>
+                </Grid>
+
+                <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,24,0,18">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid>
+                            <TextBlock Text="Texto a escribir" FontWeight="SemiBold" FontSize="15"/>
+                            <TextBlock x:Name="CharacterCountText" Text="0 caracteres" HorizontalAlignment="Right"
+                                       Foreground="{StaticResource MutedBrush}" FontSize="12"/>
+                        </Grid>
+
+                        <Border Grid.Row="1" Margin="0,12,0,18" BorderBrush="{StaticResource LineBrush}"
+                                BorderThickness="1" CornerRadius="12" Background="#FBFCFE">
+                            <TextBox x:Name="InputTextBox" AcceptsReturn="True" AcceptsTab="True"
+                                     TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" BorderThickness="0"
+                                     Background="Transparent" Padding="16" FontSize="15" FontFamily="Segoe UI"
+                                     TextChanged="InputTextBox_TextChanged" SpellCheck.IsEnabled="True"
+                                     ToolTip="Escribe o pega aquí el texto que deseas introducir en otra aplicación."/>
+                        </Border>
+
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <Grid>
+                                    <TextBlock Text="Intervalo entre caracteres" FontWeight="SemiBold"/>
+                                    <TextBlock x:Name="SpeedValueText" Text="50 ms" HorizontalAlignment="Right"
+                                               Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                </Grid>
+                                <Slider x:Name="SpeedSlider" Minimum="20" Maximum="300" Value="50"
+                                        TickFrequency="10" IsSnapToTickEnabled="True" Margin="0,8,0,0"
+                                        ValueChanged="SpeedSlider_ValueChanged"/>
+                                <TextBlock Text="Fijo y predecible" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <Grid>
+                                    <TextBlock Text="Cuenta regresiva" FontWeight="SemiBold"/>
+                                    <TextBlock x:Name="CountdownValueText" Text="5 segundos" HorizontalAlignment="Right"
+                                               Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold"/>
+                                </Grid>
+                                <Slider x:Name="CountdownSlider" Minimum="3" Maximum="10" Value="5"
+                                        TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,8,0,0"
+                                        ValueChanged="CountdownSlider_ValueChanged"/>
+                                <TextBlock Text="Tiempo para elegir la ventana destino" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="3" Margin="0,22,0,0">
+                            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock x:Name="EstimateText" Text="Duración estimada: —" FontWeight="SemiBold"/>
+                                <TextBlock Text="No se utiliza el portapapeles durante la escritura."
+                                           Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,3,0,0"/>
+                            </StackPanel>
+                            <Button x:Name="StartButton" Grid.Column="1" Content="Comenzar escritura  →"
+                                    Style="{StaticResource PrimaryButtonStyle}" Click="StartButton_Click" IsEnabled="False"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="2" Background="#EEF0FF" CornerRadius="14" Padding="16,13">
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <Border Width="10" Height="10" CornerRadius="5" Background="{StaticResource PrimaryBrush}" VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="1" Margin="12,0">
+                            <TextBlock x:Name="StatusText" Text="Listo para comenzar" FontWeight="SemiBold" FontSize="13"/>
+                            <ProgressBar x:Name="TypingProgress" Height="5" Margin="0,7,0,0" Minimum="0" Maximum="100"
+                                         Value="0" Foreground="{StaticResource PrimaryBrush}" Background="#D9DDF4"/>
+                        </StackPanel>
+                        <TextBlock x:Name="ProgressText" Grid.Column="2" Text="0%" VerticalAlignment="Center"
+                                   Foreground="{StaticResource MutedBrush}" FontWeight="SemiBold"/>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="GuideView" Visibility="Collapsed" Margin="42,36">
+                <StackPanel>
+                    <TextBlock Text="Guía rápida" FontSize="28" FontWeight="Bold"/>
+                    <TextBlock Text="Tres pasos sencillos para empezar." Foreground="{StaticResource MutedBrush}" Margin="0,6,0,24"/>
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="1" Foreground="{StaticResource PrimaryBrush}" FontSize="30" FontWeight="Bold"/>
+                            <TextBlock Text="Prepara el contenido" FontSize="18" FontWeight="SemiBold" Margin="0,4,0,4"/>
+                            <TextBlock Text="Coloca el texto en el editor principal y selecciona un intervalo fijo cómodo." Foreground="{StaticResource MutedBrush}"/>
+                            <Separator Margin="0,20" Background="{StaticResource LineBrush}"/>
+                            <TextBlock Text="2" Foreground="{StaticResource PrimaryBrush}" FontSize="30" FontWeight="Bold"/>
+                            <TextBlock Text="Elige la ventana destino" FontSize="18" FontWeight="SemiBold" Margin="0,4,0,4"/>
+                            <TextBlock Text="Pulsa Comenzar. La aplicación se minimizará y aparecerá una banda flotante; durante la cuenta regresiva, haz clic donde debe empezar el texto." Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap"/>
+                            <Separator Margin="0,20" Background="{StaticResource LineBrush}"/>
+                            <TextBlock Text="3" Foreground="{StaticResource PrimaryBrush}" FontSize="30" FontWeight="Bold"/>
+                            <TextBlock Text="Conserva el control" FontSize="18" FontWeight="SemiBold" Margin="0,4,0,4"/>
+                            <TextBlock Text="F7 pausa o continúa desde cualquier ventana. F8 detiene el proceso de inmediato." Foreground="{StaticResource MutedBrush}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <Grid x:Name="AboutView" Visibility="Collapsed" Margin="42,36">
+                <StackPanel>
+                    <TextBlock Text="Uso responsable" FontSize="28" FontWeight="Bold"/>
+                    <TextBlock Text="Automatización clara, segura y bajo tu control." Foreground="{StaticResource MutedBrush}" Margin="0,6,0,24"/>
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="✓  Privacidad local" FontSize="18" FontWeight="SemiBold"/>
+                            <TextBlock Text="El texto permanece en tu equipo. TeclaFlow no lo envía a ningún servicio."
+                                       Foreground="{StaticResource MutedBrush}" Margin="27,5,0,18"/>
+                            <TextBlock Text="✓  Sin portapapeles durante la ejecución" FontSize="18" FontWeight="SemiBold"/>
+                            <TextBlock Text="Los caracteres se envían como entrada de teclado Unicode a la ventana activa."
+                                       Foreground="{StaticResource MutedBrush}" Margin="27,5,0,18"/>
+                            <TextBlock Text="✓  Control de emergencia" FontSize="18" FontWeight="SemiBold"/>
+                            <TextBlock Text="Puedes pausar con F7 o detener con F8, incluso con TeclaFlow minimizado."
+                                       Foreground="{StaticResource MutedBrush}" Margin="27,5,0,18"/>
+                            <Border Background="#FFF6E6" CornerRadius="12" Padding="16" Margin="0,8,0,0">
+                                <TextBlock Text="Utilízalo únicamente donde la automatización esté permitida. La herramienta no oculta su funcionamiento ni garantiza compatibilidad con aplicaciones protegidas o ejecutadas como administrador."
+                                           TextWrapping="Wrap" Foreground="#765116" LineHeight="21"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="TutorialOverlay" Grid.ColumnSpan="2" Background="#B8171D31" Visibility="Collapsed" Opacity="0">
+            <Border Width="530" MaxWidth="530" Background="White" CornerRadius="22" Padding="32"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Border.Effect><DropShadowEffect BlurRadius="35" ShadowDepth="8" Opacity="0.25"/></Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                    <Button Content="×" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent"
+                            BorderThickness="0" FontSize="24" Foreground="{StaticResource MutedBrush}" Cursor="Hand"
+                            Click="CloseTutorial_Click"/>
+                    <Border Grid.Row="1" Width="76" Height="76" CornerRadius="24" Background="#EEF0FF" HorizontalAlignment="Center" Margin="0,4,0,18">
+                        <TextBlock x:Name="TutorialIcon" Text="⌨" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel Grid.Row="2">
+                        <TextBlock x:Name="TutorialTitle" Text="Bienvenido a TeclaFlow" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="TutorialBody" Text="Prepara tu texto y controla cada paso desde una interfaz sencilla."
+                                   Foreground="{StaticResource MutedBrush}" TextAlignment="Center" TextWrapping="Wrap"
+                                   FontSize="14" LineHeight="21" Margin="12,10,12,20"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                            <Ellipse x:Name="Dot0" Width="8" Height="8" Fill="{StaticResource PrimaryBrush}" Margin="4"/>
+                            <Ellipse x:Name="Dot1" Width="8" Height="8" Fill="#D7DAE5" Margin="4"/>
+                            <Ellipse x:Name="Dot2" Width="8" Height="8" Fill="#D7DAE5" Margin="4"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Grid Grid.Row="3">
+                        <Button x:Name="TutorialBackButton" Content="Atrás" HorizontalAlignment="Left"
+                                Style="{StaticResource SecondaryButtonStyle}" Padding="18,11" Visibility="Hidden" Click="TutorialBack_Click"/>
+                        <Button x:Name="TutorialNextButton" Content="Siguiente  →" HorizontalAlignment="Right"
+                                Style="{StaticResource PrimaryButtonStyle}" Padding="20,11" Click="TutorialNext_Click"/>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
