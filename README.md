@@ -29,6 +29,12 @@ dotnet build .\TeclaFlow.slnx --configuration Release
 
 El proyecto utiliza WPF y .NET 9 para Windows, sin paquetes externos. El contenido no se envía a servidores y el portapapeles no se utiliza durante la escritura.
 
+## Instalador para Windows
+
+La forma recomendada de instalar TeclaFlow es descargar `TeclaFlow-Setup-1.0.0.exe` desde la sección **Releases** de GitHub. El asistente instala la aplicación para el usuario actual, permite crear un acceso directo y añade un desinstalador estándar de Windows.
+
+El código del instalador y sus recursos visuales están en la carpeta `installer`.
+
 ## Consideraciones
 
 - La aplicación destino debe admitir entrada de teclado Unicode.

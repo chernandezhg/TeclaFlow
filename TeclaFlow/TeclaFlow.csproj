@@ -7,6 +7,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>TeclaFlow</AssemblyName>
     <RootNamespace>TeclaFlow</RootNamespace>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Product>TeclaFlow</Product>
+    <Company>Christopher Hernandez</Company>
+    <Description>Aplicación de escritorio para escritura asistida carácter por carácter.</Description>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\teclaflow.ico</ApplicationIcon>
   </PropertyGroup>
